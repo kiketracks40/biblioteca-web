@@ -19,6 +19,8 @@ const Tables = {
         
     },
 
+        
+
     initializeLibros() {
         return $('#tablaLibros').DataTable({
             ajax: {
@@ -49,7 +51,8 @@ const Tables = {
             },
        
         });
-   
+
+          
     },
 
     initializeUsuarios() {    
@@ -83,6 +86,8 @@ const Tables = {
         });
     },
 
+ 
+
     initializePrestamos() {
         $('#tablaPrestamos').DataTable({
             ajax: {
@@ -104,7 +109,8 @@ const Tables = {
                 }
             ]
         });
-    },  
+    },
+      
 };          
        
 

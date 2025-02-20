@@ -1,14 +1,56 @@
 
 
-/*$(document).ready(function() {
-    if (Auth.init()) {
-        Tables.initialize();
-        
-        
-    }*/
-
     let authToken = localStorage.getItem('token');
 
+
+    $('#nuevoUsuario').click(function() {
+        $('#formUsuario')[0].reset();
+        $('#modalUsuario').modal('show');
+    });
+    
+    
+    // Guardar Usuario
+    $('#guardarUsuario').click(function() {
+        if (!$('#formUsuario')[0].checkValidity()) {
+            $('#formUsuario')[0].reportValidity();
+            return;
+        }
+    
+        const userData = {
+            nombre: $('#nombreUsuario').val(),
+            apellido: $('#apellidoUsuario').val(),
+            email: $('#emailUsuario').val(),
+            password: $('#passwordUsuario').val(),
+            departamento: $('#departamentoUsuario').val(),
+            rol: $('#rolUsuario').val()
+        };
+    
+        $.ajax({
+            url: 'http://localhost:3000/api/usuarios',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(userData),
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Usuario creado exitosamente'
+                });
+                $('#modalUsuario').modal('hide');
+                $('#tablaUsuarios').DataTable().ajax.reload();
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: xhr.responseJSON?.error || 'Error al crear usuario'
+                });
+            }
+        });
+    });
     
     
         // Event Handlers
@@ -266,6 +308,10 @@
                 ajaxUrl = 'http://localhost:3000/api/autores/libros';
                 break;
         }
+
+        
+
+       
     
         // Initialize DataTable with selected configuration
         reportTable = $('#tablaReporte').DataTable({
@@ -285,11 +331,27 @@
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
             },
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Exportar',
+                    buttons: [
+                        'copy', 'csv', 'excel',
+                        {
+                            text: 'PDF',
+                            action: function(e, dt, node, config) {
+                                const data = dt.data().toArray();
+                                ReportGenerator.generatePrestamosReport(data).download('reporte_prestamos.pdf');
+                            }
+                        }
+                    ]
+                }
+            ]
         });
     });
-    
+
+   
+      
     // Form validation
     function validateForm(formId) {
         const form = document.getElementById(formId);
@@ -320,23 +382,7 @@
         // ... rest of the código
     });
     
-    // Add DataTables export buttons
-    $.extend(true, $.fn.dataTable.defaults, {
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'collection',
-                text: 'Exportar',
-                buttons: [
-                    'copy',
-                    'excel',
-                    'csv',
-                    'pdf',
-                    'print'
-                ]
-            }
-        ]
-    });
+   
     
     
     
@@ -531,61 +577,11 @@
     }
     
     
-    
-    $('#nuevoUsuario').click(function() {
+  /*  $('#modalUsuario').on('hidden.bs.modal', function() {
         $('#formUsuario')[0].reset();
-        $('#modalUsuario').modal('show');
-    });
+    });*/
     
-    
-    // Guardar Usuario
-    $('#guardarUsuario').click(function() {
-        if (!$('#formUsuario')[0].checkValidity()) {
-            $('#formUsuario')[0].reportValidity();
-            return;
-        }
-    
-        const userData = {
-            nombre: $('#nombreUsuario').val(),
-            apellido: $('#apellidoUsuario').val(),
-            email: $('#emailUsuario').val(),
-            password: $('#passwordUsuario').val(),
-            departamento: $('#departamentoUsuario').val(),
-            rol: $('#rolUsuario').val()
-        };
-    
-        $.ajax({
-            url: 'http://localhost:3000/api/usuarios',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(userData),
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Usuario creado exitosamente'
-                });
-                $('#modalUsuario').modal('hide');
-                $('#tablaUsuarios').DataTable().ajax.reload();
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: xhr.responseJSON?.error || 'Error al crear usuario'
-                });
-            }
-        });
-    });
-    
-    $('#modalUsuario').on('hidden.bs.modal', function() {
-        $('#formUsuario')[0].reset();
-    });
-    
-    $('#tablaUsuarios').on('click', '.editar-usuario', function() {
+  /*  $('#tablaUsuarios').on('click', '.editar-usuario', function() {
         const data = tablaUsuarios.row($(this).parents('tr')).data();
         $('#usuarioId').val(data.UsuarioId);
         $('#nombreUsuario').val(data.Nombre);
@@ -597,10 +593,10 @@
         $('.edit-mode').show();
         $('.modal-title').text('Editar Usuario');
         $('#modalUsuario').modal('show');
-    });
+    });*/
     
     // Eliminar Usuario
-    $('#tablaUsuarios').on('click', '.eliminar-usuario', function() {
+   /* $('#tablaUsuarios').on('click', '.eliminar-usuario', function() {
         if (!confirm('¿Está seguro de eliminar este usuario?')) {
             return;
         }
@@ -618,13 +614,13 @@
                 alert('Error: ' + xhr.responseJSON.error);
             }
         });
-    });
+    });*/
     
     // Clear form on modal close
-    $('#modalUsuario').on('hidden.bs.modal', function() {
+   /* $('#modalUsuario').on('hidden.bs.modal', function() {
         $('#formUsuario')[0].reset();
         $('#usuarioId').val('');
-    });
+    });*/
     
 
     
