@@ -242,6 +242,7 @@
     </div>
 
 
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Registro de Actividades</h3>
@@ -398,6 +399,7 @@
     </div>
 </div>
 
+
 <!-- Nuevo Ejemplar Modal -->
 <div class="modal fade" id="modalEjemplar">
     <div class="modal-dialog">
@@ -430,6 +432,9 @@
     </div>
 </div>
 
+<button class="crear-libro btn btn-primary">Nuevo Libro</button>
+<button class="crear-prestamo btn btn-primary">Nuevo Préstamo</button>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
@@ -460,11 +465,31 @@
 
 <script>
 
-$(document).ready(function() {
+function initializeApp() {
+   if (Auth.init()) {
+       mostrarBotonesPorRol();
+       initializeTables();
+   }
+}
+
+function mostrarBotonesPorRol() {
+   const user = JSON.parse(localStorage.getItem('user'));
+   if (user.rol === 'Usuario') {
+       $('.crear-libro').hide();
+       $('.editar-libro').hide();
+       $('.crear-prestamo').show();
+   }
+}
+
+$(document).ready(initializeApp);
+
+
+
+/*$(document).ready(function() {
 if (Auth.init()) {
     Tables.initialize();
  }
-});
+});*/
 
  
 </script>

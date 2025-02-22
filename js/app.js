@@ -3,6 +3,25 @@
     let authToken = localStorage.getItem('token');
 
 
+    $('#modalUsuario').on('hidden.bs.modal', function() {
+        $('#formUsuario')[0].reset();
+      });
+    
+     $('#tablaUsuarios').on('click', '.editar-usuario', function() {
+        const data = tablaUsuarios.row($(this).parents('tr')).data();
+        $('#usuarioId').val(data.UsuarioId);
+        $('#nombreUsuario').val(data.Nombre);
+        $('#apellidoUsuario').val(data.Apellido);
+        $('#emailUsuario').val(data.Email);
+        $('#departamentoUsuario').val(data.Departamento);
+        $('#rolUsuario').val(data.Rol);
+        $('#passwordUsuario').prop('required', false);
+        $('.edit-mode').show();
+        $('.modal-title').text('Editar Usuario');
+        $('#modalUsuario').modal('show');
+      });
+
+
     $('#nuevoUsuario').click(function() {
         $('#formUsuario')[0].reset();
         $('#modalUsuario').modal('show');
@@ -50,9 +69,11 @@
                 });
             }
         });
-    });
+  }); //aqui termina esta funcion 
     
-    
+
+
+
         // Event Handlers
         $('#nuevoPrestamo').click(function() {
             cargarSelectUsuarios();
@@ -577,23 +598,7 @@
     }
     
     
-  /*  $('#modalUsuario').on('hidden.bs.modal', function() {
-        $('#formUsuario')[0].reset();
-    });*/
-    
-  /*  $('#tablaUsuarios').on('click', '.editar-usuario', function() {
-        const data = tablaUsuarios.row($(this).parents('tr')).data();
-        $('#usuarioId').val(data.UsuarioId);
-        $('#nombreUsuario').val(data.Nombre);
-        $('#apellidoUsuario').val(data.Apellido);
-        $('#emailUsuario').val(data.Email);
-        $('#departamentoUsuario').val(data.Departamento);
-        $('#rolUsuario').val(data.Rol);
-        $('#passwordUsuario').prop('required', false);
-        $('.edit-mode').show();
-        $('.modal-title').text('Editar Usuario');
-        $('#modalUsuario').modal('show');
-    });*/
+   
     
     // Eliminar Usuario
    /* $('#tablaUsuarios').on('click', '.eliminar-usuario', function() {
