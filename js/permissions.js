@@ -6,7 +6,7 @@ const Permissions = {
         const roles = {
             Administrador: ['all'],
             Bibliotecario: ['read', 'create', 'update'],
-            Usuario: ['read']
+            Usuario: ['read', 'createPrestamo']
         };
 
         return userRole === 'Administrador' || 

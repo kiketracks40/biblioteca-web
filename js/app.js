@@ -3,6 +3,30 @@
     let authToken = localStorage.getItem('token');
 
 
+    
+    $('#tablaUsuarios').on('click', '.editar-usuario', function() {
+        // Get DataTable instance properly
+        const tabla = $('#tablaUsuarios').DataTable();
+        const data = tabla.row($(this).parents('tr')).data();
+        
+        // Fill form with user data
+        $('#usuarioId').val(data.UsuarioId);
+        $('#nombreUsuario').val(data.Nombre);
+        $('#apellidoUsuario').val(data.Apellido);
+        $('#emailUsuario').val(data.Email);
+        $('#departamentoUsuario').val(data.Departamento);
+        $('#rolUsuario').val(data.Rol);
+        
+        // Set password as not required for editing
+        $('#passwordUsuario').prop('required', false);
+        
+        // Show edit mode elements
+        $('.edit-mode').show();
+        $('.modal-title').text('Editar Usuario');
+        $('#modalUsuario').modal('show');
+    });
+
+
     $('#nuevoUsuario').click(function() {
         $('#formUsuario')[0].reset();
         $('#modalUsuario').modal('show');
@@ -50,9 +74,39 @@
                 });
             }
         });
+  }); //aqui termina esta funcion 
+    
+  $('#tablaUsuarios').on('click', '.eliminar-usuario', function() {
+    if (!confirm('¿Está seguro de eliminar este usuario?')) {
+        return;
+    }
+    console.log('Delete button clicked');
+    const tabla = $('#tablaUsuarios').DataTable();
+    const data = tabla.row($(this).parents('tr')).data();
+    console.log('User data:', data); 
+    
+    $.ajax({
+        url: `http://localhost:3000/api/usuarios/${data.UsuarioId}`,
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        success: function() {
+            tabla.ajax.reload();
+            alert('Usuario eliminado exitosamente');
+        },
+        error: function(xhr) {
+            alert('Error: ' + xhr.responseJSON.error);
+        }
     });
-    
-    
+});
+
+
+   $('#modalUsuario').on('hidden.bs.modal', function() {
+        $('#formUsuario')[0].reset();
+        $('#usuarioId').val('');
+    });
+
         // Event Handlers
         $('#nuevoPrestamo').click(function() {
             cargarSelectUsuarios();
@@ -577,26 +631,10 @@
     }
     
     
-  /*  $('#modalUsuario').on('hidden.bs.modal', function() {
-        $('#formUsuario')[0].reset();
-    });*/
-    
-  /*  $('#tablaUsuarios').on('click', '.editar-usuario', function() {
-        const data = tablaUsuarios.row($(this).parents('tr')).data();
-        $('#usuarioId').val(data.UsuarioId);
-        $('#nombreUsuario').val(data.Nombre);
-        $('#apellidoUsuario').val(data.Apellido);
-        $('#emailUsuario').val(data.Email);
-        $('#departamentoUsuario').val(data.Departamento);
-        $('#rolUsuario').val(data.Rol);
-        $('#passwordUsuario').prop('required', false);
-        $('.edit-mode').show();
-        $('.modal-title').text('Editar Usuario');
-        $('#modalUsuario').modal('show');
-    });*/
+   
     
     // Eliminar Usuario
-   /* $('#tablaUsuarios').on('click', '.eliminar-usuario', function() {
+   $('#tablaUsuarios').on('click', '.eliminar-usuario', function() {
         if (!confirm('¿Está seguro de eliminar este usuario?')) {
             return;
         }
@@ -614,13 +652,10 @@
                 alert('Error: ' + xhr.responseJSON.error);
             }
         });
-    });*/
+    });
     
     // Clear form on modal close
-   /* $('#modalUsuario').on('hidden.bs.modal', function() {
-        $('#formUsuario')[0].reset();
-        $('#usuarioId').val('');
-    });*/
+ 
     
 
     
